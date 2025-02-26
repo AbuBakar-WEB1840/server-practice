@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>
+        Web page
+    </title>
+
+    <script>
+        function showForms(formID) {
+            document.getElementById("new_user").style.display = "none";
+            document.getElementById("update_user").style.display = "none";
+            document.getElementById("delete_user").style.display = "none";
+            document.getElementById("read_user").style.display = "none";
+            document.getElementById(formID).style.display = 'block';
+        }
+        function showData() {
+            const userId = document.getElementById("id_new").value;  // Get ID from input
+            console.log("user id:", userId);
+            if (!userId) {
+                console.log("Error: ID is required");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("id", userId);
+
+            fetch('/read_user_form', {
+                method: 'POST',
+                body: formData
+                // headers: {"Content-Type": "application/json"},
+                // body: JSON.stringify({
+                //     "id":userId
+                // })
+            })
+                .then(response => response.json())
+                .then(data => { 
+                    console.log("Server Response:", data);
+                    console.log("Email:", data.email);               
+                    console.log("Id:", data.id);
+                })
+                .catch(error => console.error("Fetch Error:", error));
+        }
+
+    </script>
+</head>
+
+<body>
+    <h1>
+        Web Page using REST API's and mogoDB
+    </h1>
+
+    <!-- New User Form -->
+    <button id="new_user" onclick="showForms('new_user_form')">
+        New User
+    </button><br>
+    <div id="new_user_form" style="display: none;">
+        <form method="POST" action="/new_user_form">
+            <label for="new_user_id"> Enter Your ID: </label>
+            <input type="text" id="new_user_id" name="id" placeholder="Enter your ID"><br>
+            <label for="new_user_name"> Enter Your Name: </label>
+            <input type="text" id="new_user_name" name="name" placeholder="Enter your name"><br>
+            <label for="new_user_email"> Enter Your Email: </label>
+            <input type="text" id="new_user_email" name="email" placeholder="Enter your email"><br>
+            <label for="new_user_password">Enter Your Password: </label>
+            <input type="text" id="new_user_password" name="password" placeholder="Enter Your Passowrd"><br>
+            <label for="nerw_user_role">Enter Your Role: </label>
+            <input type="text" id="nerw_user_role" name="role" placeholder="Enter Your Role"><br>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <button id="update_user" onclick="showForms('update_user_form')">
+        Update User
+    </button><br>
+
+    <div id="update_user_form" style="display: none;">
+        <form action="/update_user" method="POST">
+            <label for="name">Name: </label>
+            <input type="text" id="name" name="name" placeholder="Enter your name"><br>
+            <label for="id">ID:</label>
+            <input type="text" id="id" name="id" placeholder="Enter your ID"><br>
+            <label for="email">Email: </label>
+            <input type="text" id="email" name="email" placeholder="Enter your password"><br>
+            <label for="password">Password: </label>
+            <input type="text" id="password" name="password" placeholder="Enter your password"><br>
+            <label for="role">Role: </label>
+            <input type="text" id="role" name="role" placeholder="Enter your role"><br>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Delete User -->
+    <button id="delete_user" onclick="showForms('delete_user_form')">Delete User</button><br>
+    <div id="delete_user_form" style="display: none;">
+        <form action="/delete_user_form" method="POST">
+            <label for="id">ID:</label>
+            <input type="text" name="id" id="id" placeholder="Enter your ID"><br>
+            <label for="password">Password:</label>
+            <input type="text" id="password" name="password" placeholder="Enter your password"><br>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Read User -->
+    <button id="read_user" onclick="showForms('read_user_form')">Read User</button><br>
+    <div id="read_user_form" style="display: none;">
+        <!-- <form action="/read_user_form" method="POST"> -->
+        <label for="ID">ID:</label>
+        <input type="text" id="id_new" name="id_new" placeholder="Enter your id"><br>
+
+        <button type="submit" onclick="showData()">Submit</button>
+        <!-- </form> -->
+    </div>
+
+    <!-- Show data -->
+    <div id="show_data" style="display: none;">
+        <label for="ID">ID:</label>
+        <span id="user_id" name="id"></span><br>
+
+    </div>
+</body>
+
+</html>
